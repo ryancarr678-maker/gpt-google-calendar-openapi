@@ -33,55 +33,151 @@
     }
   ],
   "paths": {
-    "/calendars/primary/events": {
-      "post": {
-        "operationId": "createEvent",
-        "summary": "Create calendar event",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "summary": { "type": "string" },
-                  "description": { "type": "string" },
-                  "location": { "type": "string" },
-                  "attendees": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "email": { "type": "string" }
-                      }
+  "/calendars/primary/events": {
+    "post": {
+      "operationId": "createEvent",
+      "summary": "Create calendar event",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "summary": { "type": "string" },
+                "description": { "type": "string" },
+                "location": { "type": "string" },
+                "attendees": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "email": { "type": "string" }
                     }
-                  },
-                  "start": {
-                    "type": "object",
-                    "properties": {
-                      "dateTime": { "type": "string" },
-                      "timeZone": { "type": "string" }
-                    },
-                    "required": ["dateTime", "timeZone"]
-                  },
-                  "end": {
-                    "type": "object",
-                    "properties": {
-                      "dateTime": { "type": "string" },
-                      "timeZone": { "type": "string" }
-                    },
-                    "required": ["dateTime", "timeZone"]
                   }
                 },
-                "required": ["summary", "start", "end"]
+                "start": {
+                  "type": "object",
+                  "properties": {
+                    "dateTime": { "type": "string" },
+                    "timeZone": { "type": "string" }
+                  },
+                  "required": ["dateTime", "timeZone"]
+                },
+                "end": {
+                  "type": "object",
+                  "properties": {
+                    "dateTime": { "type": "string" },
+                    "timeZone": { "type": "string" }
+                  },
+                  "required": ["dateTime", "timeZone"]
+                }
+              },
+              "required": ["summary", "start", "end"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Event created"
+        }
+      }
+    }
+  },
+  "/calendars/primary/events/{eventId}": {
+    "patch": {
+      "operationId": "editEvent",
+      "summary": "Edit an event by ID",
+      "parameters": [
+        {
+          "name": "eventId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "summary": { "type": "string" },
+                "description": { "type": "string" },
+                "location": { "type": "string" },
+                "start": {
+                  "type": "object",
+                  "properties": {
+                    "dateTime": { "type": "string" },
+                    "timeZone": { "type": "string" }
+                  }
+                },
+                "end": {
+                  "type": "object",
+                  "properties": {
+                    "dateTime": { "type": "string" },
+                    "timeZone": { "type": "string" }
+                  }
+                }
               }
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "Event created"
+        }
+      },
+      "responses": {
+        "200": { "description": "Event updated" }
+      }
+    },
+    "delete": {
+      "operationId": "deleteEvent",
+      "summary": "Delete an event by ID",
+      "parameters": [
+        {
+          "name": "eventId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "responses": {
+        "204": { "description": "Event deleted successfully" }
+      }
+    }
+  },
+  "/freeBusy": {
+    "post": {
+      "operationId": "checkAvailability",
+      "summary": "Check user's availability",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "timeMin": { "type": "string" },
+                "timeMax": { "type": "string" },
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" }
+                    },
+                    "required": ["id"]
+                  }
+                }
+              },
+              "required": ["timeMin", "timeMax", "items"]
+            }
           }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Availability info returned"
         }
       }
     }
